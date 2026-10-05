@@ -87,8 +87,8 @@ produceSlag = true
 
 ## 📜 许可
 
-MIT 开源，代码 100% 原创（未复制任何第三方模组代码）。仓库：
-[GitHub 地址占位](https://github.com/) —— 源码、构建指南与完整配置文档见仓库 README。
+作者：**lodest-game**。MIT 开源，代码 100% 原创（未复制任何第三方模组代码）。仓库：
+[GitHub（lodest-game）](https://github.com/lodest-game) —— 源码、构建指南与完整配置文档见仓库 README。
 
 ## 🗺 计划
 

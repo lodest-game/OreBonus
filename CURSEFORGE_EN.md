@@ -95,8 +95,8 @@ Create Crushing Wheel — perfect for expert-style modpacks. Off by default.
 
 ## 📜 License
 
-MIT, 100% original code (no third-party mod code copied). Source, build guide and full config
-documentation: [GitHub link placeholder](https://github.com/).
+Author: **lodest-game**. MIT, 100% original code (no third-party mod code copied). Source, build guide
+and full config documentation: [GitHub (lodest-game)](https://github.com/lodest-game).
 
 ## 🗺 Roadmap
 

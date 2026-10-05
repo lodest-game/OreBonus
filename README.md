@@ -145,6 +145,7 @@
 
 ## 许可与代码来源
 
+- 作者：**lodest-game**
 - 许可：**MIT**（见 LICENSE）。
 - 全部 Java / JSON / 文档代码为原创，未复制任何第三方模组代码；
   `gradlew` 等 wrapper 文件来自 Gradle 官方（Apache-2.0，文件头保留）；
