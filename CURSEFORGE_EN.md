@@ -15,20 +15,24 @@ single config file** — from casual to expert, one TOML to rule them all.
 - **Create Crushing** — shallow ore: main output + 10% bonus + 75% Experience Nugget (+ cobblestone);
   deepslate ore: main output + 50% bonus (+ cobbled deepslate); copper 4/6 main outputs, gold 2 nuggets.
   Base processing time defaults to vanilla Create values (250/350/400 ticks).
-- **IE Crusher** — crushed ore: stable 2 dusts; ore: 1 dust + 10% / 50% bonus secondary.
-  Energy defaults to vanilla IE (6000 RF).
-- **IE Arc Furnace** — shallow/deepslate ore: 1 ingot + slag.
+- **IE Crusher** — ore / deepslate ore: yield-base output + chance bonus; crushed ore: fixed dust
+  count + configurable bonus chance (default 2 dusts). Energy defaults to vanilla IE (6000 RF).
+- **IE Arc Furnace** — shallow/deepslate ore: yield-base ingots + stable slag + chance bonus ingot.
   Time & energy default to vanilla IE (200 ticks / 102400 RF).
 - **Zinc line** — new Zinc Dust item: crush crushed zinc for 2 dusts, smelt/blast it into ingots,
   and use it as the brass-alloy additive.
+- **Copper hand-mining sync** — hand-mined copper now drops a uniform 1~yield-base random amount
+  (default 1-4 shallow / 1-6 deepslate), so machine output is always the manual ceiling;
+  Silk Touch & Fortune still work.
 - **Dust alloys** (Arc Furnace, stacked single-slot output) — copper dust + 4 dusts → **1 slot × 4 Brass Ingots** + slag;
   cobblestone + 2 dusts → **1 slot × 2 Andesite Alloy** + slag. **Product is fixed; main input, additives,
   output count, slag, time & energy are all user-configurable** (see below).
 
-### 🎚 Fully configurable chances, time & energy (`config/orebonus-common.toml`)
+### 🎚 Fully configurable chances, yields, time & energy (`config/orebonus-common.toml`)
 
-11 knobs per ore: shallow/deepslate bonus chance, nugget chance & count, shallow/deepslate main
-output count, Create crushing time (shallow/deepslate), IE crusher energy, IE arc furnace time &
+13 knobs per ore: shallow/deepslate bonus chance, nugget chance & count, the shared "yield base"
+(used by all three machines and, for copper, the manual-mining ceiling), crushed-ore dust count &
+bonus chance, Create crushing time (shallow/deepslate), IE crusher energy, IE arc furnace time &
 energy. Chances default to 10%/50%/75%; **time & energy default to the
 vanilla mod values**; plus a **global chance multiplier** for one-click difficulty scaling.
 Apply with in-game `/reload` — no restart needed.
@@ -39,12 +43,14 @@ bonusChanceMultiplier = 1.0    # 0.5 = halved rewards (harder), 2.0 = doubled (e
 disableHammerCrushing = false  # expert-mode switch (below)
 
 [ores.iron]
-shallowBonusChance = 0.10
-deepslateBonusChance = 0.50
+shallowBonusChance = 0.10          # bonus chance shared by all three machines (shallow)
+deepslateBonusChance = 0.50        # bonus chance shared by all three machines (deepslate)
 expNuggetChance = 0.75
 expNuggetCount = 1
-shallowMainCount = 1
-deepslateMainCount = 1
+shallowMainCount = 1               # yield base (copper: 4, manual ceiling 1-4)
+deepslateMainCount = 1             # yield base (deepslate copper: 6, manual ceiling 1-6)
+crushedDustCount = 2               # crushed ore -> fixed dust count
+crushedDustBonusChance = 0.0       # crushed ore -> chance for +1 dust
 createCrushingTimeShallow = 250    # Create crushing base time in ticks (IE ores: 400)
 createCrushingTimeDeepslate = 350  # Create crushing base time in ticks (IE ores: 400)
 ieCrusherEnergy = 6000             # IE crusher RF per operation (ore/deepslate/crushed share it)
@@ -96,7 +102,7 @@ Create Crushing Wheel — perfect for expert-style modpacks. Off by default.
 ## 📜 License
 
 Author: **lodest-game**. MIT, 100% original code (no third-party mod code copied). Source, build guide
-and full config documentation: [GitHub (lodest-game)](https://github.com/lodest-game).
+and full config documentation: [GitHub (lodest-game)](https://github.com/lodest-game/OreBonus).
 
 ## 🗺 Roadmap
 

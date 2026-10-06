@@ -1,0 +1,43 @@
+# OreBonus 模组元数据（构建时由 Gradle 展开下方占位符）
+modLoader="javafml"
+loaderVersion="${loader_version_range}"
+license="${mod_license}"
+
+[[mods]]
+modId="${mod_id}"
+version="${mod_version}"
+displayName="${mod_name}"
+credits="https://github.com/lodest-game/OreBonus"
+authors="lodest-game"
+description='''矿石加工产出配置模组：重做 Create 粉碎轮与沉浸工程粉碎机/电弧炉的矿石配方，每种矿石的概率奖励、处理时长与能耗均可通过 config/orebonus-common.toml 调整；内置粉末合金自定义配方（材料/数量/矿渣）与专家模式开关。'''
+
+# NeoForge 本体
+[[dependencies.${mod_id}]]
+    modId="neoforge"
+    type="required"
+    versionRange="${neo_version_range}"
+    ordering="NONE"
+    side="BOTH"
+
+# Minecraft
+[[dependencies.${mod_id}]]
+    modId="minecraft"
+    type="required"
+    versionRange="${minecraft_version_range}"
+    ordering="NONE"
+    side="BOTH"
+
+# 本模组替换的就是这两个模组的配方，但通过注册表动态解析，缺失时可安全加载（配方跳过）
+[[dependencies.${mod_id}]]
+    modId="create"
+    type="optional"
+    versionRange="[6.0.10,)"
+    ordering="AFTER"
+    side="BOTH"
+
+[[dependencies.${mod_id}]]
+    modId="immersiveengineering"
+    type="optional"
+    versionRange="[12.4.2,)"
+    ordering="AFTER"
+    side="BOTH"

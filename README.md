@@ -14,15 +14,18 @@
   - 浅层原矿 → 主产物 + 10% 概率额外 + 75% 经验粒（+ 圆石副产物）；
   - 深层原矿 → 主产物 + 50% 概率额外 + 75% 经验粒（+ 深板岩圆石副产物）；
   - 铜矿主产物 4 个 / 深层 6 个；金矿经验粒 2 个——全部数值可配置。
-- **IE 粉碎机配方重做**：粗矿 → 稳定 2 粉末；浅层原矿 → 1 粉末 + 10% 额外；
-  深层原矿 → 1 粉末 + 50% 额外（能耗默认与原版一致：6000 RF）。
-- **IE 电弧炉配方重做**：浅层/深层原矿 → 1 锭 + 矿渣（默认与原版一致：200 tick / 102400 RF），
-  覆盖原版三种矿石与 IE 五种矿石。
+- **IE 粉碎机配方重做**：原矿 / 深层原矿按「产量基数」出粉 + 概率额外（与 Create 粉碎轮同概率）；
+  粉碎粗矿 → 固定数量粉末 + 可配置概率额外（默认 2 粉、无额外，能耗默认与原版一致：6000 RF）。
+- **IE 电弧炉配方重做**：浅层/深层原矿 → 产量基数个锭 + 稳定矿渣 + 概率额外锭（默认与原版一致：
+  200 tick / 102400 RF），覆盖原版三种矿石与 IE 五种矿石。
+- **铜矿手挖掉落联动**：手镐挖掘铜矿掉落改为 1~产量基数的均匀随机（默认浅层 1-4、深层 1-6），
+  粉碎轮产量恒为手挖上限，杜绝手动挖掘倒挂；精准采集/时运照常生效。
 - **粉末合金**（电弧炉，单格堆叠输出，完全自定义）：
   - 默认：铜粉 + 锌粉/钢粉/铝粉/镍粉 → 1 格 ×4 黄铜锭 + 1 格矿渣；圆石 + 钢粉/铝粉 → 1 格 ×2 安山合金 + 1 格矿渣；
   - 产物固定为黄铜锭 / 安山合金，主材料、最多 4 种添加剂、产物数量、是否产矿渣、时间与能耗、
     是否启用全部可在 `[alloys.*]` 配置节中修改。
-- **可配置难度**：每种矿石 11 个参数——浅层/深层额外概率、经验粒概率与数量、主产物数量、
+- **可配置难度**：每种矿石 13 个参数——浅层/深层额外概率（三种机器共用）、经验粒概率与数量、
+  产量基数（三种机器共用，铜矿同时决定手挖上限）、粉碎粗矿出粉数量与概率额外、
   Create 粉碎轮浅层/深层基础时长、IE 粉碎机能耗、IE 电弧炉时间与能耗（时长/能耗默认与原模组一致）；
   另有全局概率倍率一键缩放；修改后游戏内 `/reload` 即生效。
 - **专家模式开关**：`disableHammerCrushing = true` 时删除 IE 全部
@@ -42,7 +45,7 @@
 
 ## 安装
 
-1. 把 `orebonus-1.0.0.jar` 放入 `.minecraft/mods`；
+1. 把 `orebonus-1.1.0.jar` 放入 `.minecraft/mods`；
 2. 进入游戏，日志出现「[orebonus] 已注入 69 个配方」即生效。
 
 ## 配置文件
@@ -59,12 +62,14 @@
 	disableHammerCrushing = false
 
 [ores.iron]   # iron/gold/copper/zinc/silver/aluminum/lead/nickel/uranium 各一节（生成时注释会带上金属名）
-	shallowBonusChance = 0.10          # 浅层铁矿额外产出概率（Create 粉碎轮与 IE 粉碎机共用）
-	deepslateBonusChance = 0.50        # 深层铁矿额外产出概率
+	shallowBonusChance = 0.10          # 浅层铁矿额外产出概率（Create 粉碎轮 / IE 粉碎机 / IE 电弧炉共用）
+	deepslateBonusChance = 0.50        # 深层铁矿额外产出概率（三种机器共用）
 	expNuggetChance = 0.75             # Create 粉碎轮粉碎铁矿产出经验粒的概率
 	expNuggetCount = 1                 # 经验粒数量（金矿默认 2）
-	shallowMainCount = 1               # 浅层铁矿主产物数量（铜矿默认 4）
-	deepslateMainCount = 1             # 深层铁矿主产物数量（深层铜矿默认 6）
+	shallowMainCount = 1               # 浅层铁矿产量基数（三种机器共用；铜矿默认 4，同时决定手挖上限 1~4）
+	deepslateMainCount = 1             # 深层铁矿产量基数（三种机器共用；深层铜矿默认 6，手挖上限 1~6）
+	crushedDustCount = 2               # 粉碎粗铁 → 固定粉末数量
+	crushedDustBonusChance = 0.0       # 粉碎粗铁概率额外 +1 粉末（0 = 无；受全局倍率影响）
 
 	createCrushingTimeShallow = 250    # Create 粉碎轮·浅层铁矿基础时长 tick（原版：铁/金/铜/锌 250，IE 矿 400）
 	createCrushingTimeDeepslate = 350  # Create 粉碎轮·深层铁矿基础时长 tick（原版：铁/金/铜/锌 350，IE 矿 400）
@@ -120,18 +125,28 @@
 | 还原旧版默认手感 | 各矿 `createCrushingTimeShallow/Deepslate=100`、`ieCrusherEnergy=3200`、`ieArcTime=100`、`ieArcEnergy=51200` |
 | 更硬核 | `bonusChanceMultiplier=0.3`（或各概率调成 0.05）、粉碎轮时长调大 |
 | 更轻松 | `bonusChanceMultiplier=2.0`（单值上限自动限制在 100%）、粉碎轮时长调小 |
-| 铜矿不再“高产” | `[ores.copper] shallowMainCount=2, deepslateMainCount=3` |
+| 铜矿不再“高产” | `[ores.copper] shallowMainCount=2, deepslateMainCount=3`（手挖上限同步变为 1-2 / 1-3） |
 | 专家模式（禁锤子砸粉） | `[general] disableHammerCrushing=true` |
 
 ## 构建
 
-- 环境：JDK 21 + 网络（首次构建需下载 Gradle 9.2.1、NeoForge 21.1.250 与 Minecraft 依赖）
-- 命令：`gradlew build`，产物在 `build/libs/orebonus-1.0.0.jar`
-- 开发调试：`gradlew runClient`
+本机已配置好共享构建环境（所有 1.21.1 模组共用，按 Java 版本号统一管理，无需每个项目一份）：
 
-> ⚠️ 项目路径**不要含中文**：JVM 按系统默认编码读取 Gradle worker 的参数文件，
-> 路径含中文时 worker 会报 `ClassNotFoundException: worker.org.gradle.process.internal.worker.GradleWorkerMain`。
-> 请把项目放到纯英文路径（如 `F:\HMCL\orebonus-mod`）再构建。
+- **源码仓库**：`E:\工作区\orebonus-mod`（仅 Git 仓库文件）
+- **构建环境**：`E:\build-env\java-21`（JDK 21 + Gradle 9.2.1 + 依赖缓存，ASCII 路径）
+- **产物输出**：`E:\工作区\编译模组存放文件夹`
+
+一键构建（PowerShell）：
+
+```bat
+cd /d E:\工作区
+powershell -ExecutionPolicy Bypass -File .\build-orebonus.ps1
+```
+
+脚本会把源码复制到 ASCII 临时目录构建（避开中文路径导致 Gradle worker 报
+`ClassNotFoundException: worker.org.gradle.process.internal.worker.GradleWorkerMain` 的问题），
+成功后自动把 jar 复制到 `编译模组存放文件夹`。手动构建命令等价于：
+`gradle --no-daemon build`（`JAVA_HOME` 指向 `E:\build-env\java-21` 内的 JDK 21）。
 
 ## 常见问题
 
@@ -145,7 +160,7 @@
 
 ## 许可与代码来源
 
-- 作者：**lodest-game**
+- 作者：**lodest-game** · 仓库：[github.com/lodest-game/OreBonus](https://github.com/lodest-game/OreBonus)
 - 许可：**MIT**（见 LICENSE）。
 - 全部 Java / JSON / 文档代码为原创，未复制任何第三方模组代码；
   `gradlew` 等 wrapper 文件来自 Gradle 官方（Apache-2.0，文件头保留）；
